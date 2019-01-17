@@ -1,6 +1,6 @@
 # Pytorch-Handwritten-Mathematical-Expression-Recognition
 
-This program uses Attention and Coverage to realize **HMER** (HandWritten Mathematical Expression Recognition) and written by **Hongyu Wang** in June 2018 at MSRA.
+This program uses Attention and Coverage to realize **HMER** (HandWritten Mathematical Expression Recognition) and written by **Hongyu Wang**.
 
 **Notice:**  
 This program is writting with reference to the work of **Dr. Jianshu Zhang** from USTC. 
