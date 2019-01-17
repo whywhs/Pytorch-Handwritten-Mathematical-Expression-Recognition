@@ -42,17 +42,15 @@ This program is writting with reference to the work of **Dr. Jianshu Zhang** fro
 + > WER loss: **25.715%**  
  ExpRate: **28.216%** 
 
-+ ###Visualization of results
++ Visualization of results
 ![avatar](http://r.photo.store.qq.com/psb?/V13MmUWH1KBoey/DpjTkIdquQo7zYbletKcv*EEPXZWipzxQuSiU53cw24!/r/dEcBAAAAAAAA)
 ![avatar](http://r.photo.store.qq.com/psb?/V13MmUWH1KBoey/Se*yEixUuODmf.g9J9ViJm85cWk7QwM6jEVij87cUxc!/r/dL4AAAAAAAAA)
 
-+ ###Visualization of Attention
++ Visualization of Attention
 
-	1. Input image  
-	![avatar](http://r.photo.store.qq.com/psb?/V13MmUWH1KBoey/1gc6vVDYrdNOwnYHhft3kMm0UjBQV8*sVxzaoOUixqY!/r/dL8AAAAAAAAA)
-
-	2. Step by Step
-	![avatar](http://m.qpic.cn/psb?/V13MmUWH1KBoey/Fv78zebr.kLV.TcsPurlB.LIhDE1t2GnDHcFm3vmYus!/b/dL8AAAAAAAAA&bo=TQIZAQAAAAADF2U!&rf=viewer_4)
-	![avatar](http://m.qpic.cn/psb?/V13MmUWH1KBoey/SDhLdfFBYFbZMsxUTTYFmuNHC6LxihjADY0QMog54.k!/b/dFQBAAAAAAAA&bo=TwIhAQAAAAADF18!&rf=viewer_4)
-    ![avatar](http://m.qpic.cn/psb?/V13MmUWH1KBoey/plPANWRYY*0c3hAccSGMgtefee1hRMTUa.h*sYFoXEI!/b/dFIBAAAAAAAA&bo=UwIfAQAAAAADF30!&rf=viewer_4)
-	
+Input image  
+![avatar](http://r.photo.store.qq.com/psb?/V13MmUWH1KBoey/1gc6vVDYrdNOwnYHhft3kMm0UjBQV8*sVxzaoOUixqY!/r/dL8AAAAAAAAA)  
+step by step  
+![avatar](http://m.qpic.cn/psb?/V13MmUWH1KBoey/Fv78zebr.kLV.TcsPurlB.LIhDE1t2GnDHcFm3vmYus!/b/dL8AAAAAAAAA&bo=TQIZAQAAAAADF2U!&rf=viewer_4)
+![avatar](http://m.qpic.cn/psb?/V13MmUWH1KBoey/SDhLdfFBYFbZMsxUTTYFmuNHC6LxihjADY0QMog54.k!/b/dFQBAAAAAAAA&bo=TwIhAQAAAAADF18!&rf=viewer_4)
+![avatar](http://m.qpic.cn/psb?/V13MmUWH1KBoey/plPANWRYY*0c3hAccSGMgtefee1hRMTUa.h*sYFoXEI!/b/dFIBAAAAAAAA&bo=UwIfAQAAAAADF30!&rf=viewer_4)
