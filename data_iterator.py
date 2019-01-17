@@ -1,7 +1,6 @@
 '''
 Python 3.6 
 Pytorch 0.3
-This project is produced by Hongyu Wang in June 2018 at MSRA.
 '''
 import numpy
 import pickle as pkl
