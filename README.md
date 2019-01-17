@@ -40,9 +40,10 @@ This program is writting with reference to the work of **Dr. Jianshu Zhang** fro
 + The best result of this model is: 
 
 + > WER loss: **25.715%**  
- ExpRate: **28.216%** 
+ ExpRate: **28.216%**  
 
-+ Visualization of results
++ Visualization of results  
+
 ![avatar](http://r.photo.store.qq.com/psb?/V13MmUWH1KBoey/DpjTkIdquQo7zYbletKcv*EEPXZWipzxQuSiU53cw24!/r/dEcBAAAAAAAA)
 ![avatar](http://r.photo.store.qq.com/psb?/V13MmUWH1KBoey/Se*yEixUuODmf.g9J9ViJm85cWk7QwM6jEVij87cUxc!/r/dL4AAAAAAAAA)
 
