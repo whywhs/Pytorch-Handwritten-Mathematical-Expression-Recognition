@@ -64,18 +64,8 @@ def dataIterator(feature_file,label_file,dictionary,batch_size,batch_Imagesize,m
         if len(lab)>maxlen:
             print('sentence', uid, 'length bigger than', maxlen, 'ignore')
 
-        elif len(lab)< 7:
-            print('sentence', uid, 'length bigger than', maxlen, 'ignore')
-
         elif size>maxImagesize:
             print('image', uid, 'size bigger than', maxImagesize, 'ignore')
-
-
-        elif imagehigh[uid] > 90:
-            print('11')
-
-        elif imagewidth[uid] < 440:
-            print('11')
 
         else:
             uidList.append(uid)
