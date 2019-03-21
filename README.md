@@ -25,7 +25,7 @@ This program is writting with reference to the work of **Dr. Jianshu Zhang** fro
 # Requirements
 
 	Python 3.6
-	Pytorch 0.3
+	Pytorch 0.3 (This is important!)
 
 # Training and Testing
 1. Install Requirements.
