@@ -125,14 +125,14 @@ train_loader = torch.utils.data.DataLoader(
     batch_size = batch_size,
     shuffle = True,
     collate_fn = collate_fn,
-    #num_workers=4,
+    num_workers=4,
     )
 test_loader = torch.utils.data.DataLoader(
     dataset = off_image_test,
     batch_size = batch_size,
     shuffle = True,
     collate_fn = collate_fn,
-    #num_workers=4,
+    num_workers=4,
 )
 
 def my_train(target_length,attn_decoder1,
