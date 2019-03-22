@@ -42,6 +42,8 @@ This program is writting with reference to the work of **Dr. Jianshu Zhang** fro
 + > WER loss: **25.715%**  
  ExpRate: **28.216%**  
 
++ The HMER V2.0
+![avatar](http://m.qpic.cn/psb?/V13MmUWH1KBoey/j8PBopZLNdZnNvCyyZRSPK.RWzFieO420uMgrUjEHtI!/b/dFIBAAAAAAAA&bo=iQNCAokDQgICOR0!&rf=viewer_4)
 + Visualization of results  
 
 ![avatar](http://r.photo.store.qq.com/psb?/V13MmUWH1KBoey/DpjTkIdquQo7zYbletKcv*EEPXZWipzxQuSiU53cw24!/r/dEcBAAAAAAAA)
