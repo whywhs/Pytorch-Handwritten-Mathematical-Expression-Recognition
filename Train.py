@@ -303,7 +303,7 @@ for epoch in range(1000):
         # label
         for i_label in range(target_length_t):
             label.append(int(y_t[0][i_label]))
-        label.append(0)
+        #label.append(0)
 
         dist, llen = cmp_result(label, prediction)
         total_dist += dist
