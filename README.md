@@ -9,6 +9,8 @@
 + > WER loss: **24.097%**  
  ExpRate: **32.216%**  
   
+5、Any discussion and questions are welcome to contact me (why0706@buaa.edu.cn).
+  
 ## Original
 This program uses Attention and Coverage to realize **HMER** (HandWritten Mathematical Expression Recognition) and written by **Hongyu Wang**.
 
