@@ -1,6 +1,7 @@
 '''
 Python 3.6 
-Pytorch 0.3
+Pytorch 0.4
+Written by Hongyu Wang in Beihang univer
 '''
 import torch
 import math
@@ -10,10 +11,9 @@ import torch.nn.functional as F
 import numpy
 import torch.utils.data as data
 from data_iterator import dataIterator
-from Densenet import DenseNet121
+from Densenet_torchvision import densenet121
 from Attention_RNN import AttnDecoderRNN
 import random
-
 
 # compute the wer loss
 def cmp_result(label,rec):
@@ -49,7 +49,7 @@ batch_size=1
 maxlen=48
 maxImagesize= 100000
 hidden_size = 256
-teacher_forcing_ratio = 0.2
+teacher_forcing_ratio = 0.5
 
 worddicts = load_dict(dictionaries[0])
 worddicts_r = [None] * len(worddicts)
@@ -125,14 +125,14 @@ train_loader = torch.utils.data.DataLoader(
     batch_size = batch_size,
     shuffle = True,
     collate_fn = collate_fn,
-    num_workers=4,
+    num_workers=8,
     )
 test_loader = torch.utils.data.DataLoader(
     dataset = off_image_test,
     batch_size = batch_size,
     shuffle = True,
     collate_fn = collate_fn,
-    num_workers=4,
+    num_workers=8,
 )
 
 def my_train(target_length,attn_decoder1,
@@ -163,16 +163,17 @@ def my_train(target_length,attn_decoder1,
                                                                                              attention_sum,
                                                                                              decoder_attention,
                                                                                              dense_input)
-            loss += criterion(decoder_output[0], y[0][di])
+
+            loss += criterion(decoder_output[0], y[:,di])
             my_num = my_num + 1
             if int(y[0][di]) == 0:
                 break
-            decoder_input = y[0][di]
+            decoder_input = y[:,di]
 
         loss.backward()
-        encoder_optimizer1.step()
+        #encoder_optimizer1.step()
         decoder_optimizer1.step()
-        return loss.data[0]
+        return loss.item()
 
     else:
         encoder_optimizer1.zero_grad()
@@ -183,27 +184,49 @@ def my_train(target_length,attn_decoder1,
             decoder_output, decoder_hidden, decoder_attention,attention_sum= attn_decoder1(decoder_input, decoder_hidden,
                                                                                 output_highfeature, output_area,
                                                                                 attention_sum,decoder_attention,dense_input)
+            #print(decoder_output.size()) 1*1*112
+            #print(y.size())  1*37
             topv, topi = decoder_output[0][0].topk(1)
             decoder_input = topi
-            loss += criterion(decoder_output[0], y[0][di])
+            loss += criterion(decoder_output[0], y[:,di])
             my_num = my_num + 1
 
             # if int(topi[0]) == 0:
             #     break
 
         loss.backward()
-        encoder_optimizer1.step()
+        #encoder_optimizer1.step()
         decoder_optimizer1.step()
-        return loss.data[0]
+        return loss.item()
 
-encoder = DenseNet121().cuda()
-attn_decoder1 = AttnDecoderRNN(hidden_size,112,dropout_p=0.1).cuda()
+#encoder = DenseNet121().cuda()
+encoder = densenet121().cuda()
+
+
+pthfile = r'densenet121-a639ec97.pth'
+pretrained_dict = torch.load(pthfile) 
+encoder_dict = encoder.state_dict()
+pretrained_dict = {k: v for k, v in pretrained_dict.items() if k in encoder_dict}
+encoder_dict.update(pretrained_dict)
+encoder.load_state_dict(encoder_dict)
+
+attn_decoder1 = AttnDecoderRNN(hidden_size,112,dropout_p=0.2).cuda()
+# attn_pre = torch.load('model/attn_decoder_lr0.00009_nopadding_baseline.pkl')
+# attn_dict = attn_decoder1.state_dict()
+# attn_pre = {k: v for k, v in attn_pre.items() if k in attn_dict}
+# attn_dict.update(attn_pre)
+# attn_decoder1.load_state_dict(attn_dict)
+# encoder.load_state_dict(torch.load('model/encoder_lr0.00009_nopadding.pkl'))
+# attn_decoder1.load_state_dict(torch.load('model/attn_decoder_lr0.00009_nopadding.pkl'))
+
 lr_rate = 0.00009
 encoder_optimizer1 = torch.optim.Adam(encoder.parameters(), lr=lr_rate)
 decoder_optimizer1 = torch.optim.Adam(attn_decoder1.parameters(), lr=lr_rate)
 
 criterion = nn.CrossEntropyLoss()
-loss_all_compare = 100
+exprate = 0
+encoder.load_state_dict(torch.load('model/encoder_lr0.00009_nopadding_pre_GN_te05_d02.pkl'))
+attn_decoder1.load_state_dict(torch.load('model/attn_decoder_lr0.00009_nopadding_pre_GN_te05_d02.pkl'))
 
 for epoch in range(1000):
 
@@ -246,13 +269,13 @@ for epoch in range(1000):
             whole_loss += running_loss
             running_loss = running_loss/100
             print('epoch is %d, loading for %.3f%%, running_loss is %f' %(epoch,pre,running_loss))
-            with open("training_data/running_loss_%.5f.txt" %(lr_rate),"a") as f:
+            with open("training_data/running_loss_%.5f_pre_GN_te05_d02.txt" %(lr_rate),"a") as f:
                 f.write("%s\n"%(str(running_loss)))
             running_loss = 0
 
     loss_all_out = whole_loss / len_train
     print("epoch is %d, the whole loss is %f" % (epoch, loss_all_out))
-    with open("training_data/whole_loss_%.5f.txt" % (lr_rate), "a") as f:
+    with open("training_data/whole_loss_%.5f_pre_GN_te05_d02.txt" % (lr_rate), "a") as f:
         f.write("%s\n" % (str(loss_all_out)))
 
     # this is the prediction and compute wer loss
@@ -310,27 +333,32 @@ for epoch in range(1000):
         total_label += llen
         total_line += 1
         if dist == 0:
-            total_line_rec += 1
+            total_line_rec = total_line_rec+ 1
 
+    print('total_line_rec is',total_line_rec)
     wer = float(total_dist) / total_label
     sacc = float(total_line_rec) / total_line
     print('wer is %.5f' % (wer))
     print('sacc is %.5f ' % (sacc))
-    with open("training_data/wer_%.5f.txt" % (lr_rate), "a") as f:
+    with open("training_data/wer_%.5f_pre_GN_te05_d02.txt" % (lr_rate), "a") as f:
         f.write("%s\n" % (str(wer)))
 
 
-    if (wer < loss_all_compare):
-        loss_all_compare = wer
-        print(loss_all_compare)
+    if (sacc > exprate):
+        exprate = sacc
+        print(exprate)
         print("saving the model....")
-        print('encoder_lr%.5f_nopadding.pkl' %(lr_rate))
-        torch.save(encoder.state_dict(), 'model/encoder_lr%.5f_nopadding.pkl'%(lr_rate))
-        torch.save(attn_decoder1.state_dict(), 'model/attn_decoder_lr%.5f_nopadding.pkl'%(lr_rate))
+        print('encoder_lr%.5f_nopadding_pre_GN_te05_d02_f.pkl' %(lr_rate))
+        torch.save(encoder.state_dict(), 'model/encoder_lr%.5f_nopadding_pre_GN_te05_d02_f.pkl'%(lr_rate))
+        torch.save(attn_decoder1.state_dict(), 'model/attn_decoder_lr%.5f_nopadding_pre_GN_te05_d02_f.pkl'%(lr_rate))
         print("done")
     else:
-        print('the best is %f' % (loss_all_compare))
+        print('the best is %f' % (exprate))
         print('the loss is bigger than before,so do not save the model')
+
+
+
+
 
 
 
