@@ -1,6 +1,7 @@
 '''
 Python 3.6 
-Pytorch 0.3
+Pytorch 0.4
+Written by Hongyu Wang in Beihang university
 '''
 import torch
 import math
@@ -11,12 +12,14 @@ import numpy
 import torch.utils.data as data
 from data_iterator import dataIterator
 from Attention_RNN import AttnDecoderRNN
+from Resnet101 import resnet101
+from Densenet_torchvision import densenet121
 from Densenet import DenseNet121
 from PIL import Image
 from numpy import *
-from pylab import *
-import matplotlib.pyplot as plt
-import matplotlib.ticker as ticker
+#from pylab import *
+#import matplotlib.pyplot as plt
+#import matplotlib.ticker as ticker
 
 torch.backends.cudnn.benchmark = False
 
@@ -52,7 +55,7 @@ dictionaries=['./dictionary.txt']
 batch_Imagesize=16
 valid_batch_Imagesize=16
 batch_size=1
-maxlen=7
+maxlen=48
 maxImagesize=100000
 hidden_size = 256
 
@@ -125,10 +128,12 @@ test_loader = torch.utils.data.DataLoader(
     collate_fn = collate_fn
 )
 
-encoder = DenseNet121().cuda()
+#encoder = DenseNet121().cuda()
+#encoder = resnet101().cuda()
+encoder = densenet121().cuda()
 attn_decoder1 = AttnDecoderRNN(hidden_size,112,dropout_p=0.1).cuda()
-encoder.load_state_dict(torch.load('model/encoder_lr0.00009_nopadding_nocov.pkl'))
-attn_decoder1.load_state_dict(torch.load('model/attn_decoder_lr0.00009_nopadding_nocov.pkl'))
+encoder.load_state_dict(torch.load('model/encoder_lr0.00009_nopadding_pre_GN_te05_d02_f.pkl'))
+attn_decoder1.load_state_dict(torch.load('model/attn_decoder_lr0.00009_nopadding_pre_GN_te05_d02_f.pkl'))
 
 total_dist = 0
 total_label = 0
@@ -156,8 +161,8 @@ for step_t, (x_t, y_t) in enumerate(test_loader):
     x_real_width = x_t.size()[3]
     x_real = x_t.view(x_real_high,x_real_width)
     y_t = Variable(y_t.cuda())
-    out_t,out_1_conv = encoder(x_t)
-    out_1_conv = out_1_conv.squeeze(0)
+    out_t = encoder(x_t)
+    #out_1_conv = out_1_conv.squeeze(0)
     output_highfeature_t = out_t.squeeze(0)
     x_mean_t = torch.mean(output_highfeature_t)
     x_mean_t = float(x_mean_t)
@@ -296,3 +301,4 @@ print('hit is %d' % (hit_all))
 print('ins is %d' % (ins_all))
 print('dls is %d' % (dls_all))
 print('wer loss is %.5f,%.5f,%.5f,%.5f,%.5f,%.5f,%.5f' % (wer_1, wer_2, wer_3, wer_4, wer_5, wer_6, wer_up))
+
