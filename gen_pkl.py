@@ -1,6 +1,7 @@
 '''
 Python 3.6 
-Pytorch 0.3
+Pytorch 0.4
+Written by Hongyu Wang in Beihang university
 '''
 import os
 import sys
