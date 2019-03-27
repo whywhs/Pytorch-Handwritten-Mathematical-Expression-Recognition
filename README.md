@@ -1,5 +1,15 @@
 # Pytorch-Handwritten-Mathematical-Expression-Recognition
 
+## Update in 2019/3/27:  
+
+1、Now, this program is running in Pytorch0.4.   
+2、Use pretrained Densenet weights.(You can download [here](https://download.pytorch.org/models/densenet121-a639ec97.pth))  
+3、Solve some BUGs. (sacc is always 0).  
+4、Improve the accuracy of recognition. 
++ > WER loss: **24.097%**  
+ ExpRate: **32.216%**  
+  
+## Original
 This program uses Attention and Coverage to realize **HMER** (HandWritten Mathematical Expression Recognition) and written by **Hongyu Wang**.
 
 **Notice:**  
