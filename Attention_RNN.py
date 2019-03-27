@@ -1,6 +1,7 @@
 '''
 Python 3.6 
-Pytorch 0.3
+Pytorch 0.4
+Written by Hongyu Wang in Beihang university
 '''
 import torch
 import torch.nn as nn
@@ -18,7 +19,8 @@ class AttnDecoderRNN(nn.Module):
         self.dropout = nn.Dropout(self.dropout_p)
 
         self.embedding = nn.Embedding(self.output_size, batch_size * 256)
-        self.gru = nn.GRUCell(684, 256)
+        #self.gru = nn.GRUCell(684, 256)
+        self.gru = nn.GRUCell(1024, 256)
         self.gru1 = nn.GRUCell(256, 256)
         self.out = nn.Linear(128, self.output_size)
         self.hidden = nn.Linear(256, 256)
@@ -26,21 +28,24 @@ class AttnDecoderRNN(nn.Module):
         self.conv1 = nn.Conv2d(1, 1, kernel_size=3, stride=1, padding=1)
         self.hidden2 = nn.Linear(256, 128)
         self.emb2 = nn.Linear(256, 128)
-        self.ua = nn.Linear(684, 256)
+        #self.ua = nn.Linear(684, 256)
+        self.ua = nn.Linear(1024, 256)
         self.uf = nn.Linear(1, 256)
         self.v = nn.Linear(256, 1)
-        self.wc = nn.Linear(684, 128)
-
+        #self.wc = nn.Linear(684, 128)
+        self.wc = nn.Linear(1024, 128)
 
     def forward(self, input, hidden, encoder_outputs,bb,attention_sum,decoder_attention,dense_input):
 
         # embedding the word from 1 to 256(total 112 words)
-        embedded = self.embedding(input).view(batch_size,1,256)
+        embedded = self.embedding(input).view(batch_size,256)
         embedded = self.dropout(embedded)
+        hidden = hidden.view(batch_size,256)
 
         # st = GRU(y_t-1,s_t-1)
         st = self.gru1(embedded,hidden)
         hidden1 = self.hidden(st)
+        hidden1 = hidden1.view(batch_size,1,256)
 
         # encoder_outputs from (1,height,width) => (height,width,1)
         encoder_outputs_trans = torch.transpose(encoder_outputs,0,1)
@@ -54,6 +59,7 @@ class AttnDecoderRNN(nn.Module):
 
         # encoder_outputs1 (dense_input,bb,256) attention_sum1 (dense_input,bb,256)
         encoder_outputs1 = self.ua(encoder_outputs_trans)
+        encoder_outputs1 = self.dropout(encoder_outputs1)
         attention_sum1 = self.uf(attention_sum_trans)
 
         # et (dense_input,bb)
@@ -74,13 +80,16 @@ class AttnDecoderRNN(nn.Module):
         ct = ct.unsqueeze(0)
 
         # the next hidden after gru
-        hidden_next = self.gru(ct,st[0])
-        hidden_next = hidden_next.unsqueeze(0)
+        hidden_next = self.gru(ct,st)
+        # hidden_next = hidden_next.unsqueeze(0)  #1*1*256
+        # print(hidden_next.size())
+        # exit()
 
         # compute the output (1,128)
-        hidden2 = self.hidden2(hidden_next[0])
-        embedded2 = self.emb2(embedded[0])
+        hidden2 = self.hidden2(hidden_next)
+        embedded2 = self.emb2(embedded)
         ct2 = self.wc(ct)
+        ct2 = self.dropout(ct2)
 
         #output
         output = F.log_softmax(self.out(hidden2+embedded2+ct2), dim=1)
@@ -91,3 +100,4 @@ class AttnDecoderRNN(nn.Module):
     def initHidden(self):
         result = Variable(torch.randn(1, 1, self.hidden_size))
         return result.cuda()
+
