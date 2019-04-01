@@ -225,8 +225,8 @@ decoder_optimizer1 = torch.optim.Adam(attn_decoder1.parameters(), lr=lr_rate)
 
 criterion = nn.CrossEntropyLoss()
 exprate = 0
-encoder.load_state_dict(torch.load('model/encoder_lr0.00009_nopadding_pre_GN_te05_d02.pkl'))
-attn_decoder1.load_state_dict(torch.load('model/attn_decoder_lr0.00009_nopadding_pre_GN_te05_d02.pkl'))
+#encoder.load_state_dict(torch.load('model/encoder_lr0.00009_nopadding_pre_GN_te05_d02.pkl'))
+#attn_decoder1.load_state_dict(torch.load('model/attn_decoder_lr0.00009_nopadding_pre_GN_te05_d02.pkl'))
 
 for epoch in range(1000):
 
