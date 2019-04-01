@@ -12,9 +12,9 @@ import numpy
 import torch.utils.data as data
 from data_iterator import dataIterator
 from Attention_RNN import AttnDecoderRNN
-from Resnet101 import resnet101
+#from Resnet101 import resnet101
 from Densenet_torchvision import densenet121
-from Densenet import DenseNet121
+#from Densenet import DenseNet121
 from PIL import Image
 from numpy import *
 #from pylab import *
