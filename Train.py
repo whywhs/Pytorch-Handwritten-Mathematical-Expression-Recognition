@@ -171,7 +171,7 @@ def my_train(target_length,attn_decoder1,
             decoder_input = y[:,di]
 
         loss.backward()
-        #encoder_optimizer1.step()
+        encoder_optimizer1.step()
         decoder_optimizer1.step()
         return loss.item()
 
@@ -195,7 +195,7 @@ def my_train(target_length,attn_decoder1,
             #     break
 
         loss.backward()
-        #encoder_optimizer1.step()
+        encoder_optimizer1.step()
         decoder_optimizer1.step()
         return loss.item()
 
