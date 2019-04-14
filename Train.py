@@ -1,7 +1,7 @@
 '''
 Python 3.6 
 Pytorch 0.4
-Written by Hongyu Wang in Beihang univer
+Written by Hongyu Wang in Beihang university
 '''
 import torch
 import math
