@@ -1,6 +1,6 @@
 '''
 Python 3.6 
-Pytorch 0.4
+Pytorch >= 0.4
 Written by Hongyu Wang in Beihang university
 '''
 import re
@@ -24,11 +24,13 @@ GroupNorm_num = 32
 class _DenseLayer(nn.Sequential):
     def __init__(self, num_input_features, growth_rate, bn_size, drop_rate):
         super(_DenseLayer, self).__init__()
-        self.add_module('norm1', nn.GroupNorm(GroupNorm_num,num_input_features)),
+        # self.add_module('norm1_G', nn.GroupNorm(GroupNorm_num,num_input_features)),
+        self.add_module('norm1', nn.BatchNorm2d(num_input_features)),
         self.add_module('relu1', nn.ReLU(inplace=True)),
         self.add_module('conv1', nn.Conv2d(num_input_features, bn_size *
                         growth_rate, kernel_size=1, stride=1, bias=False)),
-        self.add_module('norm2', nn.GroupNorm(GroupNorm_num,bn_size * growth_rate)),
+        # self.add_module('norm2_G', nn.GroupNorm(GroupNorm_num,bn_size * growth_rate)),
+        self.add_module('norm2', nn.BatchNorm2d(bn_size * growth_rate)),
         self.add_module('relu2', nn.ReLU(inplace=True)),
         self.add_module('conv2', nn.Conv2d(bn_size * growth_rate, growth_rate,
                         kernel_size=3, stride=1, padding=1, bias=False)),
@@ -52,7 +54,8 @@ class _DenseBlock(nn.Sequential):
 class _Transition(nn.Sequential):
     def __init__(self, num_input_features, num_output_features):
         super(_Transition, self).__init__()
-        self.add_module('norm', nn.GroupNorm(GroupNorm_num,num_input_features))
+        # self.add_module('norm_G', nn.GroupNorm(GroupNorm_num,num_input_features))
+        self.add_module('norm', nn.BatchNorm2d(num_input_features))
         self.add_module('relu', nn.ReLU(inplace=True))
         self.add_module('conv', nn.Conv2d(num_input_features, num_output_features,
                                           kernel_size=1, stride=1, bias=False))
@@ -79,8 +82,9 @@ class DenseNet(nn.Module):
 
         # First convolution
         self.features = nn.Sequential(OrderedDict([
-            ('conv0_m', nn.Conv2d(1, num_init_features, kernel_size=7, stride=2, padding=3, bias=False)),
-            ('norm0', nn.GroupNorm(GroupNorm_num,num_init_features)),
+            ('conv0_m', nn.Conv2d(2, num_init_features, kernel_size=7, stride=2, padding=3, bias=False)),
+            # ('norm0_G', nn.GroupNorm(GroupNorm_num,num_init_features)),
+            ('norm0', nn.BatchNorm2d(num_init_features)),
             ('relu0', nn.ReLU(inplace=True)),
             ('pool0', nn.MaxPool2d(kernel_size=3, stride=2, padding=1)),
         ]))
@@ -98,7 +102,8 @@ class DenseNet(nn.Module):
                 num_features = num_features // 2
 
         # Final batch norm
-        self.features.add_module('norm5', nn.GroupNorm(GroupNorm_num,num_features))
+        # self.features.add_module('norm5_G', nn.GroupNorm(GroupNorm_num,num_features))
+        self.features.add_module('norm5', nn.BatchNorm2d(num_features))
 
         # Linear layer
         self.classifier = nn.Linear(num_features, num_classes)
@@ -116,7 +121,7 @@ class DenseNet(nn.Module):
     def forward(self, x):
         features = self.features(x)
         out = F.relu(features, inplace=True)
-        # out = F.adaptive_avg_pool2d(out, (1, 1)).view(features.size(0), -1)
+        #out = F.avg_pool2d(out, kernel_size=2)
         # out = self.classifier(out)
         return out
 
@@ -127,7 +132,7 @@ def densenet121(pretrained=False, **kwargs):
     Args:
         pretrained (bool): If True, returns a model pre-trained on ImageNet
     """
-    model = DenseNet(num_init_features=64, growth_rate=32, block_config=(6, 12, 24),
+    model = DenseNet(num_init_features=64, growth_rate=32, block_config=(6,12,24),
                      **kwargs)
     if pretrained:
         # '.'s are no longer allowed in module names, but pervious _DenseLayer
@@ -145,7 +150,3 @@ def densenet121(pretrained=False, **kwargs):
                 del state_dict[key]
         model.load_state_dict(state_dict)
     return model
-
-
-
-
