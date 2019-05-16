@@ -1,5 +1,19 @@
 # Pytorch-Handwritten-Mathematical-Expression-Recognition
 
+## Update in 2019/5/16 (An important update in my program!):
+**First of all, I am very grateful to those who have used my program, and I am sorry that the previous code is not perfect. So, I updated my code to make it better for those who need it.**  
+  
+1、Now, my program is much faster and much more accurate than before. 
++ > Previous: **2h 30min for an epoch**  
+Now: **less than 15min for an epoch**
++ > WER Loss: **16.935%**  
+ExpRate: **37.987%**  
+
+2、Add **batch_size** in my code, and **Supporting Multi-GPU Parallel Operations**.  
+All of my experiments are running in two TITAN XP GPUs. The batch_size is 6, the max len is 48 and the max Image size is 100000. You can try larger if you have enough GPU memory.  
+
+3、Open the source code of **HMER V2.0**. You can see detials in HMER_v2.0.
+
 ## Update in 2019/3/27:  
 
 1、Now, this program is running in Pytorch0.4.   
