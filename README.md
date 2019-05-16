@@ -12,7 +12,9 @@ ExpRate: **37.987%**
 2、Add **batch_size** in my code, and **Supporting Multi-GPU Parallel Operations**.  
 All of my experiments are running in two TITAN XP GPUs. The batch_size is 6, the max len is 48 and the max Image size is 100000. You can try larger if you have enough GPU memory.  
 
-3、Open the source code of **HMER V2.0**. You can see detials in HMER_v2.0.
+3、Open the source code of **HMER V2.0**. You can see detials in HMER_v2.0.  
+
+4、Although the code is much better now than before, there are still many improvements. For example, you can try different optimization functions(Now is SGD) or different batch_size. If you have some good ideas and improve the results, you can contact to me. Meanwhile, I will also try some different and always pay attention to my code.  
 
 ## Update in 2019/3/27:  
 
