@@ -1,6 +1,6 @@
 '''
 Python 3.6 
-Pytorch 0.4
+Pytorch >= 0.4
 Written by Hongyu Wang in Beihang university
 '''
 import numpy
@@ -18,6 +18,7 @@ def dataIterator(feature_file,label_file,dictionary,batch_size,batch_Imagesize,m
     fp2=open(label_file,'r')
     labels=fp2.readlines()
     fp2.close()
+    len_label = len(labels)
 
     targets={}
     # map word to int with dictionary
@@ -62,10 +63,12 @@ def dataIterator(feature_file,label_file,dictionary,batch_size,batch_Imagesize,m
         batch_image_size=biggest_image_size*(i+1)
 
         if len(lab)>maxlen:
-            print('sentence', uid, 'length bigger than', maxlen, 'ignore')
+            continue
+            # print('sentence', uid, 'length bigger than', maxlen, 'ignore')
 
         elif size>maxImagesize:
-            print('image', uid, 'size bigger than', maxImagesize, 'ignore')
+            continue
+            # print('image', uid, 'size bigger than', maxImagesize, 'ignore')
 
         else:
             uidList.append(uid)
@@ -91,7 +94,9 @@ def dataIterator(feature_file,label_file,dictionary,batch_size,batch_Imagesize,m
     # last
     feature_total.append(feature_batch)
     label_total.append(label_batch)
+    len_ignore = len_label - len(feature_total)
     print('total ',len(feature_total), 'batch data loaded')
+    print('ignore',len_ignore,'images')
 
 
     return feature_total,label_total
