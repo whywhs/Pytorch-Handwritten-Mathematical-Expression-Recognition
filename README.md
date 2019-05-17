@@ -1,6 +1,8 @@
 # Pytorch-Handwritten-Mathematical-Expression-Recognition
 
 ## Update in 2019/5/16 (An important update in my program!):
+**2019/5/17 HMER V2.0 is open!**  
+
 **First of all, I am very grateful to those who have used my program, and I am sorry that the previous code is not perfect. So, I updated my code to make it better for those who need it.**  
   
 1、Now, my program is much faster and much more accurate than before. 
