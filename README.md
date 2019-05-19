@@ -8,8 +8,8 @@
 1、Now, my program is much faster and much more accurate than before. 
 + > Previous: **2h 30min for an epoch**  
 Now: **less than 15min for an epoch**
-+ > WER Loss: **16.935%**  
-ExpRate: **37.987%**  
++ > WER Loss: **17.160%**  
+ExpRate: **38.595%**  
 
 2、Add **batch_size** in my code, and **Supporting Multi-GPU Parallel Operations**.  
 All of my experiments are running in two TITAN XP GPUs. The batch_size is 6, the max len is 48 and the max Image size is 100000. You can try larger if you have enough GPU memory.  
