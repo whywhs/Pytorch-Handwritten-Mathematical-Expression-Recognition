@@ -51,7 +51,7 @@ batch_Imagesize=500000
 valid_batch_Imagesize=500000
 # batch_size for training and testing
 batch_size=6
-batch_size_t =6
+batch_size_t=6
 # the max (label length/Image size) in training and testing
 # you can change 'maxlen','maxImagesize' by the size of your GPU
 maxlen=48
@@ -289,9 +289,10 @@ criterion = nn.NLLLoss()
 # attn_decoder1.load_state_dict(torch.load('model/attn_decoder_lr0.00001_BN_te1_d05_SGD_bs8_mask_conv_bn_b.pkl'))
 decoder_input_init = torch.LongTensor([111]*batch_size).cuda()
 decoder_hidden_init = torch.randn(batch_size, 1, hidden_size).cuda()
+nn.init.xavier_uniform_(decoder_hidden_init)
 
-# encoder_optimizer1 = torch.optim.SGD(encoder.parameters(), lr=lr_rate,momentum=0.9)
-# decoder_optimizer1 = torch.optim.SGD(attn_decoder1.parameters(), lr=lr_rate,momentum=0.9)
+# encoder_optimizer1 = torch.optim.Adam(encoder.parameters(), lr=lr_rate)
+# decoder_optimizer1 = torch.optim.Adam(attn_decoder1.parameters(), lr=lr_rate)
 
 for epoch in range(200):
     encoder_optimizer1 = torch.optim.SGD(encoder.parameters(), lr=lr_rate,momentum=0.9)
@@ -336,12 +337,14 @@ for epoch in range(200):
         y = y.cuda()
         # out is CNN featuremaps
         output_highfeature = encoder(x)
-
-        x_mean = torch.mean(output_highfeature)
-        x_mean = float(x_mean)
-
-        decoder_hidden_init = decoder_hidden_init*x_mean
-        decoder_hidden_init = torch.tanh(decoder_hidden_init)
+        x_mean=[]
+        for i in output_highfeature:
+            x_mean.append(float(torch.mean(i)))
+        # x_mean = torch.mean(output_highfeature)
+        # x_mean = float(x_mean)
+        for i in range(batch_size):
+            decoder_hidden_init[i] = decoder_hidden_init[i]*x_mean[i]
+            decoder_hidden_init[i] = torch.tanh(decoder_hidden_init[i])
 
         # dense_input is height and output_area is width which is bb
         output_area1 = output_highfeature.size()
@@ -414,11 +417,17 @@ for epoch in range(200):
 
         decoder_input_t = torch.LongTensor([111]*batch_size_t)
         decoder_input_t = decoder_input_t.cuda()
+        decoder_hidden_t = torch.randn(batch_size_t, 1, hidden_size).cuda()
+        nn.init.xavier_uniform_(decoder_hidden_t)
 
-        decoder_hidden_t = torch.randn(batch_size, 1, hidden_size).cuda()
-        # nn.init.xavier_uniform_(decoder_hidden_t)
-        decoder_hidden_t = decoder_hidden_t * x_mean_t
-        decoder_hidden_t = torch.tanh(decoder_hidden_t)
+        x_mean_t=[]
+        for i in output_highfeature_t:
+            x_mean_t.append(float(torch.mean(i)))
+        # x_mean = torch.mean(output_highfeature)
+        # x_mean = float(x_mean)
+        for i in range(batch_size_t):
+            decoder_hidden_t[i] = decoder_hidden_t[i]*x_mean_t[i]
+            decoder_hidden_t[i] = torch.tanh(decoder_hidden_t[i])
 
         prediction = torch.zeros(batch_size_t,maxlen)
         #label = torch.zeros(batch_size_t,maxlen)
@@ -453,31 +462,17 @@ for epoch in range(200):
             #     plt.imshow(show_x, interpolation='nearest', cmap='gray_r')
             #     plt.show()
             
-            y_t = y_t.unsqueeze(0)
             topv,topi = torch.max(decoder_output,2)
-            if torch.sum(y_t[0,:,i])==0:
-                y_t = y_t.squeeze(0)
+            # if torch.sum(y_t[0,:,i])==0:
+            #     y_t = y_t.squeeze(0)
+            #     break
+            if torch.sum(topi)==0:
                 break
             decoder_input_t = topi
             decoder_input_t = decoder_input_t.view(batch_size_t)
 
             # prediction
             prediction[:,i] = decoder_input_t
-
-            for k in range(batch_size_t):
-                if int(y_t[0][k][i]) == 0:
-                    flag_z_t[k] = flag_z_t[k]+1
-                    if flag_z_t[k] > 1:
-                        continue
-                    else:
-                        loss_t += criterion(decoder_output[k], y_t[:,k,i])
-                else:
-
-                    loss_t += criterion(decoder_output[k], y_t[:,k,i])
-
-            y_t = y_t.squeeze(0)
-
-        whole_loss_t = whole_loss_t + loss_t.item()
 
         for i in range(batch_size_t):
             for j in range(maxlen):
@@ -510,7 +505,7 @@ for epoch in range(200):
     sacc = float(total_line_rec) / total_line
     print('wer is %.5f' % (wer))
     print('sacc is %.5f ' % (sacc))
-    print('whole loss is %.5f'%(whole_loss_t/925))
+    # print('whole loss is %.5f'%(whole_loss_t/925))
     # with open("training_data/wer_%.5f_pre_GN_te05_d02_all.txt" % (lr_rate), "a") as f:
     #     f.write("%s\n" % (str(wer)))
 
@@ -518,9 +513,9 @@ for epoch in range(200):
         exprate = sacc
         print(exprate)
         print("saving the model....")
-        print('encoder_lr%.5f_BN_te1_d05_SGD_bs8_mask_conv_bn_b.pkl' %(lr_rate))
-        torch.save(encoder.state_dict(), 'model/encoder_lr%.5f_BN_te1_d05_SGD_bs8_mask_conv_bn_b.pkl'%(lr_rate))
-        torch.save(attn_decoder1.state_dict(), 'model/attn_decoder_lr%.5f_BN_te1_d05_SGD_bs8_mask_conv_bn_b.pkl'%(lr_rate))
+        print('encoder_lr%.5f_GN_te1_d05_SGD_bs6_mask_conv_bn_b_xavier.pkl' %(lr_rate))
+        torch.save(encoder.state_dict(), 'model/encoder_lr%.5f_GN_te1_d05_SGD_bs6_mask_conv_bn_b_xavier.pkl'%(lr_rate))
+        torch.save(attn_decoder1.state_dict(), 'model/attn_decoder_lr%.5f_GN_te1_d05_SGD_bs6_mask_conv_bn_b_xavier.pkl'%(lr_rate))
         print("done")
         flag = 0
     else:
@@ -531,3 +526,11 @@ for epoch in range(200):
     if flag == 10:
         lr_rate = lr_rate*0.1
         flag = 0
+
+
+
+
+
+
+
+
