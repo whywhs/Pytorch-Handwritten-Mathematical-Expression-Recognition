@@ -13,7 +13,7 @@ import torch.utils.data as data
 from data_iterator import dataIterator
 from Densenet_torchvision import densenet121
 from Attention_RNN import AttnDecoderRNN
-from Resnet101 import resnet101
+#from Resnet101 import resnet101
 import random
 import matplotlib.pyplot as plt
 from PIL import Image
