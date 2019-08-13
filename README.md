@@ -2,14 +2,8 @@
 
 
 **2019/8/13 README.md has been sorted out and you can see the previous version in .**  
-
- 
-2、Use pretrained Densenet weights.(You can download [here](https://download.pytorch.org/models/densenet121-a639ec97.pth))  
   
-5、Any discussion and questions are welcome to contact me (why0706@buaa.edu.cn).
-  
-## Original
-This program uses Attention and Coverage to realize **HMER** (HandWritten Mathematical Expression Recognition) and written by **Hongyu Wang**.
+This program uses Attention and Coverage to realize **HMER** (HandWritten Mathematical Expression Recognition) and written by **Hongyu Wang**. Any discussion and questions are welcome to contact me (why0706@buaa.edu.cn).
 
 
 # Requirements
