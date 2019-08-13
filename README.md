@@ -3,7 +3,7 @@
 
 **2019/8/13 README.md has been sorted out and you can see the previous version in version_before.md.**  
   
-This program uses Attention and Coverage to realize **HMER** (HandWritten Mathematical Expression Recognition) and written by **Hongyu Wang**. Any discussion and questions are welcome to contact me (why0706@buaa.edu.cn).
+This program uses Attention and Coverage to realize **HMER** (HandWritten Mathematical Expression Recognition) and written by **Hongyu Wang** refer to Dr. Jianshu Zhang. Any discussion and questions are welcome to contact me (why0706@buaa.edu.cn).
 
 
 # Requirements
