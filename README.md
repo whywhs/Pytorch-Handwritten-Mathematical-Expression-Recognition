@@ -1,7 +1,7 @@
 # Handwritten-Mathematical-Expression-Recognition (Pytorch)
 
 
-**2019/8/13 README.md has been sorted out and you can see the previous version in .**  
+**2019/8/13 README.md has been sorted out and you can see the previous version in version_before.md.**  
   
 This program uses Attention and Coverage to realize **HMER** (HandWritten Mathematical Expression Recognition) and written by **Hongyu Wang**. Any discussion and questions are welcome to contact me (why0706@buaa.edu.cn).
 
@@ -12,7 +12,7 @@ This program uses Attention and Coverage to realize **HMER** (HandWritten Mathem
 	Pytorch == 1.0 
 
 # Training and Testing
-1. Install Requirements.
+1. Install Requirements and pretrained Densenet weights can be download [here](https://download.pytorch.org/models/densenet121-a639ec97.pth))  .
 2. Decompression files in **off\_image\_train** and **off\_image\_test**, and this will be your training data and testing data. 
 3. python **'gen_pkl.py'**. This python file will compress your training pictures or testing pictures into a **'.pkl'** file. Moreover, you should write the correct location of your data files. 
 4. python **'Train.py'** for training.
