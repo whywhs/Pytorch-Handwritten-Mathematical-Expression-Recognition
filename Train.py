@@ -111,7 +111,7 @@ class custom_dset(data.Dataset):
 off_image_train = custom_dset(train,train_label,batch_size)
 off_image_test = custom_dset(test,test_label,batch_size)
 
-# collate_fn is writting for padding imgs in batch. 
+# collate_fn is writing for padding imgs in batch. 
 # As images in my dataset are different size, so the padding is necessary.
 # Padding images to the max image size in a mini-batch and cat a mask. 
 def collate_fn(batch):
@@ -526,11 +526,3 @@ for epoch in range(200):
     if flag == 10:
         lr_rate = lr_rate*0.1
         flag = 0
-
-
-
-
-
-
-
-
